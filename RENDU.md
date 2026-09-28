@@ -21,7 +21,31 @@ Nom :
 
 ## Tâche 2 : ce que j'ai fait
 
-Choix faits, cas d'erreur couverts, ce que j'ai testé et comment :
+J'utilise peu la gestion de formulaire par React, j'ai demandé à l'IA de m'indiquer les éléments principaux afin de structurer mon code, surtout au niveau de la route. L'IA a réussi à me faire gagner du temps sur la structure ce qui m'a fortement aidé pour la suite.
+
+Choix faits :
+
+J'ai utilisé l'App Router de Next.js en créant la route app/api/contact/route.ts pour séparer la logique serveur de l'interface.
+
+ J'ai mis en place une validation à deux niveaux : côté client avec les attributs HTML pour guider la saisie, et côté serveur pour garantir la sécurité des données. 
+ 
+ Pour l'expérience utilisateur, j'ai ajouté un état de chargement qui désactive les champs pendant l'envoi afin que ca évite les doubles clics. J'ai conservé le message de confirmation avec getFirstName. 
+ 
+ Le traitement se fait via les logs du serveur.
+
+Cas d'erreur couverts :
+L'API bloque l'envoi et renvoie un message d'erreur clair si des champs obligatoires sont vides ou ne contiennent que des espaces, si l'adresse email n'a pas un format valide, ... 
+
+
+Ce que j'ai testé et comment :
+
+J'ai testé le cas de succès en remplissant tous les champs et en vérifiant que le message apparaît bien dans les logs du terminal.
+
+ J'ai ensuite testé les cas d'erreur en tentant d'envoyer un email malformé, un message trop court et des champs vides pour m'assurer que le formulaire bloque l'envoi et affiche le message d'erreur en rouge. 
+ 
+ Enfin, j'ai vérifié que le bouton passe bien en "Envoi en cours..." et se désactive dès le clic.
+
+
 
 ## Tâche 3 : questions et décisions
 
