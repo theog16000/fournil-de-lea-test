@@ -1,59 +1,58 @@
 import { NextResponse } from "next/server";
 
-// Regex simple et efficace pour la validation de format email
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Format belge : fixe (9 chiffres au total avec le 0) ou mobile (10 chiffres avec le 0)
+const BELGIAN_PHONE_REGEX = /^(?:\+32|0032|0)[1-9]\d{7,8}$/;
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, message } = body;
+    const { name, email, phone, isCustomOrder, message } = body;
 
-    // Validation de présence et de type
-    if (
-      typeof name !== "string" ||
-      typeof email !== "string" ||
-      typeof message !== "string"
-    ) {
-      return NextResponse.json(
-        { error: "Tous les champs doivent être renseignés." },
-    
-      );
+    // 1. Validation de base
+    if (typeof name !== "string" || typeof email !== "string" || typeof message !== "string") {
+      return NextResponse.json({ error: "Données invalides." }, { status: 400 });
     }
 
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
     const trimmedMessage = message.trim();
+    const cleanedPhone = typeof phone === "string" ? phone.replace(/[\s./-]/g, "") : "";
 
-    if (!trimmedName || trimmedName.length < 2 || trimmedName.length > 80) {
-      return NextResponse.json(
-        { error: "Le nom doit comporter entre 2 et 80 caractères." },
-      );
+    if (trimmedName.length < 2 || trimmedName.length > 80) {
+      return NextResponse.json({ error: "Nom invalide." }, { status: 400 });
     }
 
-    if (!trimmedEmail || !EMAIL_REGEX.test(trimmedEmail) || trimmedEmail.length > 120) {
+    if (!EMAIL_REGEX.test(trimmedEmail) || trimmedEmail.length > 120) {
+      return NextResponse.json({ error: "Adresse email invalide." }, { status: 400 });
+    }
+
+    if (trimmedMessage.length < 10 || trimmedMessage.length > 2000) {
+      return NextResponse.json({ error: "Message trop court ou trop long." }, { status: 400 });
+    }
+
+    // 2. Règle métier : téléphone obligatoire si commande sur mesure
+    if (isCustomOrder && !cleanedPhone) {
       return NextResponse.json(
-        { error: "Veuillez fournir une adresse email valide." },
+        { error: "Le numéro de téléphone est obligatoire pour les commandes sur mesure." },
         { status: 400 }
       );
     }
 
-    if (!trimmedMessage || trimmedMessage.length < 10 || trimmedMessage.length > 2000) {
+    // Si le téléphone est fourni, vérifier la validité belge
+    if (cleanedPhone && !BELGIAN_PHONE_REGEX.test(cleanedPhone)) {
       return NextResponse.json(
-        { error: "Le message doit comporter entre 10 et 2000 caractères." },
+        { error: "Veuillez fournir un numéro de téléphone belge valide (ex. 0470 12 34 56 ou +32 ...)." },
         { status: 400 }
       );
-    };
+    }
 
-    return NextResponse.json({
-      success: true,
-      message: "Votre message a bien été envoyé !",
-    });
+    // 3. Envoi du mail immédiat (ex. Resend / Brevo)
+    // await resend.emails.send({ ... })
 
-  } catch (error) {
-    
-    return NextResponse.json(
-      { error: "Une erreur est survenu. Veuillez réessayer." },
-      { status: 500 }
-    );
+
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Erreur serveur." }, { status: 500 });
   }
 }

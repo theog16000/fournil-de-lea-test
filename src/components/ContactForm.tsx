@@ -6,6 +6,8 @@ import { getFirstName } from "@/lib/first-name";
 export default function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [isCustomOrder, setIsCustomOrder] = useState(false);
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -19,10 +21,14 @@ export default function ContactForm() {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, message }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          isCustomOrder,
+          message,
+        }),
       });
 
       const data = await response.json();
@@ -36,7 +42,7 @@ export default function ContactForm() {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("Impossible d'envoyer le message pour le moment.");
+        setError("Impossible d'envoyer le message.");
       }
     } finally {
       setLoading(false);
@@ -46,13 +52,18 @@ export default function ContactForm() {
   if (sent) {
     return (
       <div className="mt-6 rounded-lg bg-amber-100 p-4">
-        <p>Merci {getFirstName(name)}, votre message est bien parti.</p>
+        <p>Merci {getFirstName(name)}, votre demande a bien été envoyée.</p>
+        <p className="mt-1 text-xs text-amber-800">
+          Un email de confirmation vient de vous être envoyé.
+        </p>
         <button
           type="button"
           onClick={() => {
             setSent(false);
             setName("");
             setEmail("");
+            setPhone("");
+            setIsCustomOrder(false);
             setMessage("");
           }}
           className="mt-3 text-xs font-semibold text-amber-900 underline"
@@ -91,6 +102,31 @@ export default function ContactForm() {
           disabled={loading}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="rounded border border-amber-300 p-2 disabled:bg-stone-100"
+        />
+      </label>
+
+      {/* Case à cocher pour basculer en commande sur mesure */}
+      <label className="flex items-center gap-2 text-sm font-medium text-stone-800">
+        <input
+          type="checkbox"
+          checked={isCustomOrder}
+          onChange={(e) => setIsCustomOrder(e.target.checked)}
+          disabled={loading}
+          className="h-4 w-4 rounded border-amber-300 text-amber-600 focus:ring-amber-500"
+        />
+        Il s'agit d'une commande sur mesure (gâteau, événement...)
+      </label>
+
+      <label className="grid gap-1 text-sm">
+        Téléphone {isCustomOrder ? "(obligatoire)" : "(facultatif)"}
+        <input
+          type="tel"
+          required={isCustomOrder}
+          disabled={loading}
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="Ex. 0470 12 34 56 ou +32 2 123 45 67"
           className="rounded border border-amber-300 p-2 disabled:bg-stone-100"
         />
       </label>
