@@ -4,19 +4,20 @@ Nom : GENTY Théo
 
 ## Temps
 
-| Tâche                    | Début | Fin | Durée |
-|---                       |   |  |  |
-| 1. Relire et corriger    |   12:42    |  12:59   |  16min 33s     |
-| 2. Formulaire de contact |13:01|     13:26|       |25min 32s
-| 3. Demande du client     | 13:30|    14h32 |  1h 2min 39s     |
-| **Total**                |     /  |   /  |    1h 43 min   |
+| Tâche | Début | Fin | Durée |
+| :--- | :--- | :--- | :--- |
+| 1. Relire et corriger | 12:42 | 12:59 | 16 min 33 s |
+| 2. Formulaire de contact | 13:01 | 13:26 | 25 min 32 s |
+| 3. Demande du client | 13:30 | 14:32 | 1 h 2 min 39 s |
+| **Total** | — | — | **1 h 44 min 44 s** |
 
 ## Tâche 1 : défauts trouvés
 
-| Défaut| Où |Correction |
-|Plusieurs balises h1|Ligne 34 environ (page.tsx)|Généralement pour le référencement Naturel (SEO), on évite de mettre plusieurs titre H1, il faut que cela sois sémantique (h1>h2>h3)|
-|L'attribut Alt non présent| Ligne 42 (page.tsx)|Pour le référencement Naturel, on doit mettre l'attribut alt (description de l'image avec la balise img), cela rend plus accessible et permet de renforcer le référencement|
-|Image non optimisé| Ligne 42|Généralement on utilise la balise <img> mais lorsqu'on travaille avec Next.js, on utilise le composant <Image /> de Next/image, c'est plus moderne et moins lourd.|
+| Défaut | Emplacement | Correction |
+| :--- | :--- | :--- |
+| Plusieurs balises `<h1>` | Ligne 34 (`page.tsx`) | Pour le référencement naturel (SEO), on évite de mettre plusieurs titres H1 : il faut respecter la hiérarchie sémantique (`<h1>` > `<h2>` > `<h3>`). |
+| Attribut `alt` manquant | Ligne 42 (`page.tsx`) | Renseigner l'attribut `alt` pour l'accessibilité et renforcer le SEO. |
+| Image non optimisée | Ligne 42 (`page.tsx`) | Remplacer la balise standard `<img>` par le composant `<Image />` de `next/image`, plus moderne et optimisé. |
 
 
 ## Tâche 2 : ce que j'ai fait
@@ -65,8 +66,6 @@ J'ai ajouté une case à cocher pour indiquer s'il s'agit d'une commande sur mes
 Pour le téléphone, j'ai accepté à la fois les numéros mobiles, fixes et avec l'indicatif international +32.
 
 Enfin, aucune donnée n'est enregistrée en base de données et j'ai retiré les affichages d'informations personnelles dans les logs de la console pour respecter la volonté de non-conservation des données.
-
-L'IA
 
 
 
